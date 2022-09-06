@@ -6,19 +6,10 @@ public class AudioManager : IAudioManager
 
     public static IAudioManager Current => currentImplementation ??= new AudioManager();
 
-    /// <inheritdoc />
-    public IAudioPlayer CreatePlayer(Stream audioStream)
-    {
-        ArgumentNullException.ThrowIfNull(audioStream);
+	public IAudioPlayer CreatePlayer(Uri audioStream)
+	{
+		ArgumentNullException.ThrowIfNull(audioStream);
 
-        return new AudioPlayer(audioStream);
-    }
-
-    /// <inheritdoc />
-    public IAudioPlayer CreatePlayer(string fileName)
-    {
-        ArgumentNullException.ThrowIfNull(fileName);
-
-        return new AudioPlayer(fileName);
-    }
+		return new AudioPlayer(audioStream);
+	}
 }

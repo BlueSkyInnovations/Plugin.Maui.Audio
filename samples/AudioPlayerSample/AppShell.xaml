@@ -6,8 +6,6 @@
     xmlns:pages="clr-namespace:AudioPlayerSample.Pages"
     Shell.FlyoutBehavior="Disabled">
 
-    <ShellContent
-        Title="My Library"
-        ContentTemplate="{DataTemplate pages:MyLibraryPage}" />
+    <ShellContent Title="Music Player" ContentTemplate="{DataTemplate pages:MyLibraryPage}" />
 
 </Shell>

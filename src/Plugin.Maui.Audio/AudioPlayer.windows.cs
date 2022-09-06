@@ -8,34 +8,18 @@ partial class AudioPlayer : IAudioPlayer
 	bool isDisposed = false;
 	readonly MediaPlayer player;
 
-	public double Duration => player.PlaybackSession.NaturalDuration.TotalSeconds;
-
-	public double CurrentPosition => player.PlaybackSession.Position.TotalSeconds;
-
 	public double Volume
 	{
 		get => player.Volume;
-		set => SetVolume(value, Balance);
+		set => player.Volume = Math.Clamp(value, 0, 1);
 	}
 
-	public double Balance
-	{
-		get => player.AudioBalance;
-		set => SetVolume(Volume, value);
-	}
 
 	public bool IsPlaying =>
 		player.PlaybackSession.PlaybackState == MediaPlaybackState.Playing; //might need to expand
 
-	public bool Loop
-	{
-		get => player.IsLoopingEnabled;
-		set => player.IsLoopingEnabled = value;
-	}
 
-	public bool CanSeek => player.PlaybackSession.CanSeek;
-
-	public AudioPlayer(Stream audioStream)
+	public AudioPlayer(System.Uri audioStream)
 	{
 		player = CreatePlayer();
 
@@ -44,20 +28,8 @@ partial class AudioPlayer : IAudioPlayer
 			throw new FailedToLoadAudioException($"Failed to create {nameof(MediaPlayer)} instance. Reason unknown.");
 		}
 
-		player.Source = MediaSource.CreateFromStream(audioStream?.AsRandomAccessStream(), string.Empty);
-		player.MediaEnded += OnPlaybackEnded;
-	}
-
-	public AudioPlayer(string fileName)
-	{
-		player = CreatePlayer();
-
-		if (player is null)
-		{
-			throw new FailedToLoadAudioException($"Failed to create {nameof(MediaPlayer)} instance. Reason unknown.");
-		}
-
-		player.Source = MediaSource.CreateFromUri(new Uri("ms-appx:///Assets/" + fileName));
+		player.Source = MediaSource.CreateFromUri(new Uri(audioStream.AbsoluteUri ));
+		player.AudioCategory = MediaPlayerAudioCategory.Media;
 		player.MediaEnded += OnPlaybackEnded;
 	}
 
@@ -75,8 +47,7 @@ partial class AudioPlayer : IAudioPlayer
 
 		if (player.PlaybackSession.PlaybackState == MediaPlaybackState.Playing)
 		{
-			Pause();
-			Seek(0);
+			Pause();		
 		}
 
 		player.Play();
@@ -89,33 +60,8 @@ partial class AudioPlayer : IAudioPlayer
 
 	public void Stop()
 	{
-		Pause();
-		Seek(0);
+		Pause();		
 		PlaybackEnded?.Invoke(this, EventArgs.Empty);
-	}
-
-	public void Seek(double position)
-	{
-		if (player.PlaybackSession is null)
-		{
-			return;
-		}
-
-		if (player.PlaybackSession.CanSeek)
-		{
-			player.PlaybackSession.Position = TimeSpan.FromSeconds(position);
-		}
-	}
-
-	void SetVolume(double volume, double balance)
-	{
-		if (isDisposed)
-		{
-			return;
-		}
-
-		player.Volume = Math.Clamp(volume, 0, 1);
-		player.AudioBalance = Math.Clamp(balance, -1, 1);
 	}
 
 	MediaPlayer CreatePlayer()

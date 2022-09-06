@@ -10,7 +10,7 @@ public class MyLibraryPageViewModel : BaseViewModel
 	{
 		Music = new ObservableCollection<MusicItemViewModel>
 		{
-			new MusicItemViewModel("The Happy Ukelele Song", "Stanislav Fomin", "ukelele.mp3")
+			new MusicItemViewModel("SlayRadio", "Stream", "http://relay1.slayradio.org:8000")		
 		};
 	}
 

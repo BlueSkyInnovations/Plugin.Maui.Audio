@@ -33,29 +33,11 @@ public class MusicPlayerPageViewModel : BaseViewModel, IQueryAttributable, IDisp
 		{
 			MusicItemViewModel = musicItem;
 
-			audioPlayer = audioManager.CreatePlayer(
-				await FileSystem.OpenAppPackageFileAsync(musicItem.Filename));
+			audioPlayer = audioManager.CreatePlayerFromUri( musicItem.Source);
 
-			NotifyPropertyChanged(nameof(HasAudioSource));
-			NotifyPropertyChanged(nameof(Duration));
+			NotifyPropertyChanged(nameof(HasAudioSource));	
 		}
 	}
-
-	public double CurrentPosition
-	{
-		get => audioPlayer?.CurrentPosition ?? 0;
-		set
-		{
-			if (audioPlayer is not null &&
-				audioPlayer.CanSeek &&
-				isPositionChangeSystemDriven is false)
-			{
-				audioPlayer.Seek(value);
-			}
-		}
-	}
-
-	public double Duration => audioPlayer?.Duration ?? 1;
 
 	public MusicItemViewModel MusicItemViewModel
 	{
@@ -97,32 +79,10 @@ public class MusicPlayerPageViewModel : BaseViewModel, IQueryAttributable, IDisp
 		}
 	}
 
-	public double Balance
-	{
-		get => audioPlayer?.Balance ?? 0;
-		set
-		{
-			if (audioPlayer != null)
-			{
-				audioPlayer.Balance = value;
-			}
-		}
-	}
-
-	public bool Loop
-	{
-		get => audioPlayer?.Loop ?? false;
-		set
-		{
-			audioPlayer.Loop = value;
-		}
-	}
-
 	void Play()
 	{
 		audioPlayer.Play();
 
-		UpdatePlaybackPosition();
 		NotifyPropertyChanged(nameof(IsPlaying));
 	}
 
@@ -136,8 +96,7 @@ public class MusicPlayerPageViewModel : BaseViewModel, IQueryAttributable, IDisp
 		{
 			audioPlayer.Play();
 		}
-
-		UpdatePlaybackPosition();
+	
 		NotifyPropertyChanged(nameof(IsPlaying));
 	}
 
@@ -153,33 +112,10 @@ public class MusicPlayerPageViewModel : BaseViewModel, IQueryAttributable, IDisp
 		}
 	}
 
-	void UpdatePlaybackPosition()
-	{
-		if (audioPlayer?.IsPlaying is false)
-		{
-			return;
-		}
-
-		dispatcher.DispatchDelayed(
-			TimeSpan.FromMilliseconds(16),
-			() =>
-			{
-				Console.WriteLine($"{CurrentPosition} with duration of {Duration}");
-
-				isPositionChangeSystemDriven = true;
-
-				NotifyPropertyChanged(nameof(CurrentPosition));
-
-				isPositionChangeSystemDriven = false;
-
-				UpdatePlaybackPosition();
-			});
-	}
-
 	public void TidyUp()
 	{
-		audioPlayer?.Dispose();
-		audioPlayer = null;
+		//audioPlayer?.Dispose();
+		//audioPlayer = null;
 	}
 
 	~MusicPlayerPageViewModel()

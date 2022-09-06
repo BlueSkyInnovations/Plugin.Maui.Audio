@@ -1,4 +1,5 @@
 ﻿using Foundation;
+using AVFoundation;
 
 namespace AudioPlayerSample;
 
@@ -7,3 +8,4 @@ public class AppDelegate : MauiUIApplicationDelegate
 {
 	protected override MauiApp CreateMauiApp() => MauiProgram.CreateMauiApp();
 }
+

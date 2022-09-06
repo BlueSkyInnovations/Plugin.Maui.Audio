@@ -1,4 +1,6 @@
-﻿namespace Plugin.Maui.Audio;
+﻿using System;
+
+namespace Plugin.Maui.Audio;
 
 /// <summary>
 /// Provides the ability to create <see cref="IAudioPlayer" /> instances.
@@ -6,16 +8,9 @@
 public interface IAudioManager
 {
 	/// <summary>
-	/// Creates a new <see cref="IAudioPlayer"/> with the supplied <paramref name="audioStream"/> ready to play.
+	/// ;tbd
 	/// </summary>
-	/// <param name="audioStream">The <see cref="Stream"/> containing the audio to play.</param>
-	/// <returns>A new <see cref="IAudioPlayer"/> with the supplied <paramref name="audioStream"/> ready to play.</returns>
-	IAudioPlayer CreatePlayer(Stream audioStream) => new AudioPlayer(audioStream);
-
-	/// <summary>
-	/// Creates a new <see cref="IAudioPlayer"/> with the supplied <paramref name="fileName"/> ready to play.
-	/// </summary>
-	/// <param name="fileName">The name of the file containing the audio to play.</param>
-	/// <returns>A new <see cref="IAudioPlayer"/> with the supplied <paramref name="fileName"/> ready to play.</returns>
-	IAudioPlayer CreatePlayer(string fileName) => new AudioPlayer(fileName);
+	/// <param name="audioStream"></param>
+	/// <returns></returns>
+	IAudioPlayer CreatePlayerFromUri(string uri) => new AudioPlayer(new System.Uri(uri));
 }
