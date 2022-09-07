@@ -4,7 +4,7 @@
 
 ## Getting Started
 
-* Available on NuGet: <http://www.nuget.org/packages/Plugin.Maui.StreamingAudio> [![NuGet](https://img.shields.io/nuget/v/Plugin.Maui.Audio.svg?label=NuGet)](https://www.nuget.org/packages/Plugin.Maui.StreamingAudio/)
+* Not available on NuGet (yet)
 
 ## API Usage
 
