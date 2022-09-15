@@ -24,7 +24,7 @@ partial class StreamingAudioPlayer : IStreamingAudioPlayer
 				
 		player.SetDataSource(Android.App.Application.Context, Uri.Parse(uri.AbsoluteUri));
 
-		player.Prepare();
+		player.PrepareAsync();
 	}
 
     public void Play()

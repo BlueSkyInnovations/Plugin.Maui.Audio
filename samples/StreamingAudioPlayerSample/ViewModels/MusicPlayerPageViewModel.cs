@@ -6,19 +6,19 @@ namespace StreamingAudioPlayerSample.ViewModels;
 
 public class MusicPlayerPageViewModel : BaseViewModel, IQueryAttributable, IDisposable
 {
-	readonly IStreamingAudioManager StreamingAudioManager;
+	readonly IStreamingAudioManager streamingAudioManager;
 	readonly IDispatcher dispatcher;
-	IStreamingAudioPlayer StreamingAudioPlayer;
+	IStreamingAudioPlayer streamingAudioPlayer;
 	TimeSpan animationProgress;
 	MusicItemViewModel musicItemViewModel;
 	bool isPositionChangeSystemDriven;
 	bool isDisposed;
 
 	public MusicPlayerPageViewModel(
-		IStreamingAudioManager StreamingAudioManager,
+		IStreamingAudioManager streamingAudioManager,
 		IDispatcher dispatcher)
 	{
-		this.StreamingAudioManager = StreamingAudioManager;
+		this.streamingAudioManager = streamingAudioManager;
 		this.dispatcher = dispatcher;
 
 		PlayCommand = new Command(Play);
@@ -33,7 +33,7 @@ public class MusicPlayerPageViewModel : BaseViewModel, IQueryAttributable, IDisp
 		{
 			MusicItemViewModel = musicItem;
 
-			StreamingAudioPlayer = StreamingAudioManager.CreatePlayerFromUri( musicItem.Source);
+			streamingAudioPlayer = streamingAudioManager.CreatePlayerFromUri( musicItem.Source);
 
 			NotifyPropertyChanged(nameof(HasAudioSource));	
 		}
@@ -49,9 +49,9 @@ public class MusicPlayerPageViewModel : BaseViewModel, IQueryAttributable, IDisp
 		}
 	}
 
-	public bool HasAudioSource => StreamingAudioPlayer is not null;
+	public bool HasAudioSource => streamingAudioPlayer is not null;
 
-	public bool IsPlaying => StreamingAudioPlayer?.IsPlaying ?? false;
+	public bool IsPlaying => streamingAudioPlayer?.IsPlaying ?? false;
 
 	public TimeSpan AnimationProgress
 	{
@@ -69,32 +69,32 @@ public class MusicPlayerPageViewModel : BaseViewModel, IQueryAttributable, IDisp
 
 	public double Volume
 	{
-		get => StreamingAudioPlayer?.Volume ?? 1;
+		get => streamingAudioPlayer?.Volume ?? 1;
 		set
 		{
-			if (StreamingAudioPlayer != null)
+			if (streamingAudioPlayer != null)
 			{
-				StreamingAudioPlayer.Volume = value;
+				streamingAudioPlayer.Volume = value;
 			}
 		}
 	}
 
 	void Play()
 	{
-		StreamingAudioPlayer.Play();
+		streamingAudioPlayer.Play();
 
 		NotifyPropertyChanged(nameof(IsPlaying));
 	}
 
 	void Pause()
 	{
-		if (StreamingAudioPlayer.IsPlaying)
+		if (streamingAudioPlayer.IsPlaying)
 		{
-			StreamingAudioPlayer.Pause();
+			streamingAudioPlayer.Pause();
 		}
 		else
 		{
-			StreamingAudioPlayer.Play();
+			streamingAudioPlayer.Play();
 		}
 	
 		NotifyPropertyChanged(nameof(IsPlaying));
@@ -102,9 +102,9 @@ public class MusicPlayerPageViewModel : BaseViewModel, IQueryAttributable, IDisp
 
 	void Stop()
 	{
-		if (StreamingAudioPlayer.IsPlaying)
+		if (streamingAudioPlayer.IsPlaying)
 		{
-			StreamingAudioPlayer.Stop();
+			streamingAudioPlayer.Stop();
 
 			AnimationProgress = TimeSpan.Zero;
 
